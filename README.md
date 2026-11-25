@@ -9,7 +9,7 @@ Instale Python 3.11+, Git para Windows e o GitHub CLI. Com acesso ao repositóri
 ```powershell
 gh auth login
 New-Item -ItemType Directory -Force .agents/skills | Out-Null
-gh repo clone Jeffvff/stream-clip-studio .agents/skills/stream-clip-studio
+gh repo clone NicollasDev7/stream-clip-studio .agents/skills/stream-clip-studio
 ```
 
 Abra um chat nesse workspace e peça **“Use stream-clip-studio para configurar meu perfil”**.
@@ -43,9 +43,19 @@ As configurações pessoais e a sessão ficam em `%LOCALAPPDATA%\stream-clip-stu
 [{"text":"Olha","start":0.12,"end":0.42,"language":"pt"}]
 ```
 
-A skill seleciona e revisa os intervalos e marca o idioma das falas para alimentar o renderer. O Whisper global não classifica sozinho cada fala do corte. O MP4 final tem webcam superior quando presente, gameplay ampliado, crédito do streamer, foto/nome/@ do perfil, marca do @ com 15% de opacidade e capa no primeiro frame. O renderer testa NVENC e cai para libx264 quando a GPU não está disponível. A transcrição usa o Whisper do Gaming Clip instalado.
+A skill seleciona e revisa os intervalos e marca o idioma das falas para alimentar o renderer. O Whisper global não classifica sozinho cada fala do corte. O MP4 final usa cabeçalho compacto com foto/nome/@ e título, gameplay de ponta a ponta, webcam pequena sobreposta no canto superior esquerdo e crédito do streamer sobre o jogo. A capa aparece somente no primeiro frame. O renderer testa NVENC e cai para libx264 quando a GPU não está disponível. A transcrição usa o Whisper do Gaming Clip instalado.
 
-No quadro de 1080 × 1920, a foto e os créditos ficam dentro das margens laterais de 104 px à esquerda e 144 px à direita, com espaço acima do cabeçalho e abaixo do rodapé para a interface do celular. A marca central usa 78 px quando o @ couber nesse espaço.
+No quadro de 1080 × 1920, a gameplay vai de y=300 até a base, ocupando 84% da altura, sem bordas laterais nem rodapé branco. A webcam mede 270 × 220 px, em x=36/y=332; o recorte deve privilegiar rosto, fones e ombros. A presença da webcam não diminui a área do jogo. Textos e créditos respeitam margens de 104 px à esquerda e 144 px à direita. A marca discreta usa até 46 px e 15% de opacidade. O selo opcional `--badge 'GTA 6'` aparece no cabeçalho; sem a opção, ele é omitido.
+
+Antes de produzir um lote, gere uma prévia estática do enquadramento real:
+
+```powershell
+.\run.ps1 render 'D:\Clips\LIVE DIA 3.mp4' --start 5400 --duration 60 --streamer '@streamer' --webcam '20,30,650,354' --title 'Era só um carinho' --cover-title 'ERA SÓ UM CARINHO' --cover-at 18 --badge 'GTA 6' --preview
+```
+
+`--preview` salva apenas um arquivo `.preview.png`, sem MP4, upload ou agendamento. A imagem usa o frame de `--cover-at`, sem a chamada de capa, para avaliar o layout normal. Ajuste `--focus-x` se o recorte vertical tirar o assunto principal da tela. A prévia pode coexistir com o MP4 de mesmo título; arquivos existentes não são sobrescritos. Vídeos já agendados não são substituídos automaticamente.
+
+As atualizações deste layout são de **NicollasDev7**. Esta versão continua o projeto anterior em [Jeffvff/stream-clip-studio](https://github.com/Jeffvff/stream-clip-studio), preservando seu histórico e os demais fluxos.
 
 ## TikTok Studio
 
