@@ -158,6 +158,8 @@ def main() -> None:
     render.add_argument("--streamer", required=True)
     render.add_argument("--webcam", help="x,y,w,h em pixels; omita se não houver webcam")
     render.add_argument("--focus-x", type=float, default=0.5)
+    render.add_argument("--badge", default="", help="Selo curto opcional no cabeçalho, por exemplo GTA 6")
+    render.add_argument("--preview", action="store_true", help="Salva somente uma prévia PNG do layout, sem renderizar o MP4")
     render.add_argument("--cover-title", required=True)
     render.add_argument("--cover-at", type=float, required=True, help="Segundos relativos ao começo do corte")
     render.add_argument("--words", type=Path, help="JSON de palavras em português com tempos relativos")

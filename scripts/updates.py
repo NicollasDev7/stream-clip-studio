@@ -10,7 +10,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-REPOSITORY = "Jeffvff/stream-clip-studio"
+REPOSITORY = "NicollasDev7/stream-clip-studio"
 BRANCH = "main"
 GITHUB_URL = f"https://github.com/{REPOSITORY}"
 SHA = re.compile(r"^[0-9a-f]{40}$")
