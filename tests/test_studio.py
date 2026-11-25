@@ -4,15 +4,38 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from post_renderer import crop_aspect, valid_webcam, write_words
+from post_renderer import CAM_X, CAM_Y, TOP, crop_aspect, valid_webcam, write_art, write_words
 from studio import local_original, read_profile, save_profile
 
 
 class SetupTest(unittest.TestCase):
+    def test_preview_keeps_gameplay_full_height_with_or_without_webcam(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            avatar = folder / "avatar.png"
+            Image.new("RGB", (100, 100), "yellow").save(avatar)
+            still = Image.new("RGB", (1920, 1080), "blue")
+            ImageDraw.Draw(still).rectangle((0, 124, 461, 423), fill="red")
+            profile = dict(avatar=str(avatar), name="Creator", handle="@creator")
+            args = SimpleNamespace(title="A surpresa no jogo", streamer="@streamer", badge="GTA 6",
+                                   cover_title="QUE SURPRESA")
+            font = ImageFont.load_default(size=24)
+            for cam in (None, (0, 124, 462, 300)):
+                with self.subTest(webcam=bool(cam)), patch("post_renderer.ImageFont.truetype", return_value=font):
+                    write_art(folder, profile, args, still, cam, (650, 0, 720, 1080), 220 if cam else 0, folder)
+                    with Image.open(folder / "preview.png") as preview:
+                        self.assertEqual(preview.size, (1080, 1920))
+                        for xy in ((500, TOP), (500, 1919), (0, 1200), (1079, 1200)):
+                            self.assertEqual(preview.getpixel(xy), (0, 0, 255, 255))
+                        expected = (255, 0, 0, 255) if cam else (0, 0, 255, 255)
+                        self.assertEqual(preview.getpixel((CAM_X + 30, CAM_Y + 30)), expected)
+
     def test_profile_and_import_use_isolated_unicode_media_folder(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
