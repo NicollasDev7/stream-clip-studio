@@ -1,4 +1,16 @@
-# Stream Clip Studio
+# Super Clips Studio
+
+Skill unificada para perfil, cortes, layout e agendamento no TikTok, Instagram e Kwai, com comunicação breve e carregamento seletivo de contexto. Autor das novas configurações: NicollasDev7. Histórico e créditos anteriores preservados.
+
+Instale este repositório como uma única pasta de skill chamada `super-clips-studio` e invoque **“Use $super-clips-studio para configurar meu canal”**. O ponto de entrada é [SKILL.md](SKILL.md). A configuração inicial aceita nome, @ por rede, foto opcional e layout enviado pelo usuário ou padrão. Não é necessário ativar as skills antigas.
+
+Python 3.11+, FFmpeg e ffprobe são necessários para o novo renderer portátil. `python scripts/render_clip.py JOB.json` gera um MP4 e registro técnico; a revisão editorial e a publicação são conduzidas pelo agente com ferramentas autorizadas. Referências de edição, publicação e métricas são carregadas somente quando necessárias. Origem das decisões: [references/origins.md](references/origins.md).
+
+A meta de reduzir tokens em 70% exige comparação medida; não é garantia. O pacote não inclui contas, vídeos, credenciais ou infraestrutura em nuvem. Os agendamentos só são declarados concluídos com confirmação das plataformas.
+
+## Motor legado
+
+As instruções abaixo documentam os comandos anteriores do Stream Clip Studio. O onboarding dedicado e os presets desse motor são opcionais; o fluxo e layout atuais estão no SKILL.md. Não execute login em navegador separado quando a sessão do usuário já estiver disponível nas ferramentas do ambiente.
 
 Uma skill para Codex no Windows que conecta Gaming Clip, edição vertical e agendamento nativo no TikTok Studio.
 

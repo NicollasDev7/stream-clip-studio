@@ -1,0 +1,4 @@
+interface:
+  display_name: "Super Clips Studio"
+  short_description: "Cortes, perfil, layout e publicação com contexto leve"
+  default_prompt: "Use $super-clips-studio para configurar meu canal e produzir cortes com revisão e baixo uso de tokens."

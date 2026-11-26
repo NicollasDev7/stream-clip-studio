@@ -1,0 +1,26 @@
+{
+  "channel_name": "Meu canal de cortes",
+  "handles": {
+    "tiktok": "",
+    "instagram": "",
+    "kwai": ""
+  },
+  "photo": null,
+  "output_directory": null,
+  "language": "pt-BR",
+  "timezone": "America/Sao_Paulo",
+  "layout": {
+    "mode": "default-split",
+    "reference_image": null,
+    "approved": false,
+    "watermark": "Meu canal de cortes",
+    "opening_banner_seconds": 0
+  },
+  "clip_max_seconds": 90,
+  "schedule": {
+    "start": null,
+    "end": null,
+    "interval_minutes": 30
+  },
+  "publish_authorized": false
+}

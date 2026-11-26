@@ -1,30 +1,36 @@
 ---
-name: stream-clip-studio
-description: Set up a reusable Windows creator profile, import gameplay recordings, select and render vertical clips with a post-style layout, and schedule approved batches in the native TikTok Studio. Use for gameplay clips, initial creator setup, or verified TikTok scheduling.
+name: super-clips-studio
+description: Configure canais de cortes, encontre destaques em lives, produza clipes verticais e agende lotes revisados no TikTok, Instagram e Kwai com contexto compacto.
 ---
 
-# Stream Clip Studio
+# Super Clips Studio
 
-Run the commands from this skill directory. Read [README.md](README.md) for syntax and requirements.
-The runner checks GitHub for updates at startup. If it prints an update notice, relay it to the user. Use `run.ps1 check-update` for a manual check and keep local profiles and media when replacing the skill files.
+Uma skill única: perfil do Stream Clip Studio, seleção editorial das skills de clips, comunicação breve inspirada no Caveman e publicação verificável. Não exige carregar as skills antigas.
 
-## Initial setup
+## Primeiro uso
 
-Ask for the posting profile's display name, profile picture, @handle, and one Windows folder for originals and output clips. Ask for these four together. Run `setup.ps1 onboard` with the provided values or let the user answer the interactive prompts. The setup stores the profile outside this folder, then opens a dedicated Chromium window for manual TikTok login. Never ask for or store a password. Use the saved profile for later clips. If login or a security challenge needs intervention, let the user complete it in the browser. Setup does not upload or schedule anything.
+Consulte o perfil salvo. Se não existir, pergunte numa mensagem:
+“Qual o nome do canal e @ de cada rede? Pode enviar uma foto opcional e um layout de referência, ou escolher o padrão. Qual a live, pasta de saída e redes desejadas?”
 
-## Import and cut
+Foto e layout são opcionais e podem chegar depois. Use assets/profile.example.json como estrutura. Configurar perfil não autoriza alterar identidade visual das contas. Pergunte quantidade, horários e fuso apenas se faltarem para a tarefa. Guarde perfil, mídia e sessões fora desta skill e do Git.
 
-- Process a recording only after the user asks. Use `run.ps1 import` with a local video or a direct recording URL. It keeps the original at the root of the chosen media folder. Each original gets one subfolder named after its filename without extension for final MP4s.
-- Run `analyze` with the requested duration range. Use the Gaming Clip candidates, timestamped transcript and frames to choose openings with action, surprise, euphoria or humor. Avoid idle stretches and overlapping picks. Use the requested clip count, duration and publish timing.
-- Find the webcam during ingest. Inspect the crop before using it. Pass its source pixel rectangle to `render`; omit it if absent. Use a compact profile/title header and full-width gameplay from y=300 to the bottom of the 1080 × 1920 canvas (84% of its height). Place the webcam as a small 270 × 220 inset at the upper left of the gameplay, focusing on face/headphones/shoulders; it must not create a separate band or reduce the gameplay area. Credit the streamer's correct @ over the lower left of the game. If the streamer handle is unknown and needed for the credit, ask.
-- Keep the avatar, header text, captions and streamer credit inside mobile safe margins. Use a discreet 46 px watermark at 15% opacity in the upper gameplay area. Keep the title readable in at most two lines. Use `--badge 'GTA 6'` for GTA clips; omit the optional badge for other games. Avoid large panels, a white footer or duplicated titles.
-- Before a first batch or a layout change, run `render` with `--preview` to produce a real-frame PNG for the user's evaluation. This preview does not render or upload a video. Preserve the source image geometry; adjust `--focus-x` when zooming would cut off the important subject. A generated visual mockup is a reference only, not evidence of the exact game framing. Apply a reviewed layout to future renders; do not replace already scheduled posts unless requested.
-- Use an engaging, grounded Portuguese title that doubles as the posting caption. Pick a moment within the clip for its first-frame cover and write a Portuguese cover hook of 2–5 words. The renderer builds the cover from the real frame, embeds it only as frame 0 and delivers an MP4. The profile's @ is the center watermark at 15% opacity.
-- When dialogue has Portuguese and English, inspect the source and give the renderer only reliable Portuguese word timings via `--words`. Each word uses relative seconds and `language: pt`. English dialogue gets no burned-in caption. Check the first two frames, a captioned frame, and final resolution/duration/audio before delivery.
+## Fluxo
 
-## Schedule
+1. Retome pelo checkpoint compacto; preserve arquivos, revisões e aprovações existentes.
+2. Para seleção/render, leia somente [edição](references/editing.md). Analise a transcrição uma vez, escolha abertura forte, ação/reação e desfecho completo. Até 90 segundos; não prometa viralização.
+3. Primeiro layout ou mudança relevante: mostre um frame real antes do lote, salvo autorização para seguir. Padrão: câmera acima, gameplay quadrada ampliada e centralizada abaixo, sem bordas, espelho ou fundo borrado; somente a marca do canal.
+4. Renderize por script e revise imagem/áudio. scripts/render_clip.py oferece render técnico portátil; o motor legado permanece disponível, mas seus presets antigos não definem o padrão desta skill.
+5. Publique somente quando solicitado. Leia [publicação](references/publishing.md) nessa fase. Registre confirmações por plataforma.
 
-- Only schedule the exact files requested. Point the plan YAML at the relevant clips subfolder and preview the chosen video, fully dated schedule, timezone, caption, hashtags and privacy. Ask for a single approval of the batch; then run the approved plan hash. Keep a single window during the batch, and stop when it finishes.
-- Never click immediate publishing instead of scheduling. The optional `confirm_pending_check` is for an explicitly approved Studio content-check dialog only, and it rereads schedule controls first. Keep it off unless approved for that batch. Let the user handle CAPTCHA/MFA.
-- One safe recovery may replace a failed tab within the same Chromium window. After submission, repeat only read-only verification; reconcile ambiguous results and never resubmit them automatically. Report verified posts with links. Close the dedicated Chromium when the batch ends; do not reopen it after completion.
-- Keep all login profiles, local settings, logs, databases, photos, video files, and generated plans outside this repository.
+## Economia de tokens
+
+- Português breve, resultado primeiro, sem narração rotineira. Cumpra atualizações obrigatórias do ambiente.
+- Leia cada recurso uma vez por versão; releia apenas o trecho afetado por mudança ou falha. Não carregue todas as referências ou skills.
+- Use scripts para download, transcrição, render e validação. Logs ficam em disco; retorne contagens, caminhos e erros relevantes.
+- Navegador: conector oficial suficiente primeiro; caso contrário controles autorizados pelo ambiente. DOM direcionado antes de screenshots; imagem para revisão visual ou falha. Evite dumps e polling rápido.
+- Um uploader ativo por plataforma. Paralelismo somente onde comprovadamente seguro.
+- Após duas falhas iguais, preserve trabalho e mude a abordagem com evidência nova ou reporte bloqueio. Nunca repita submissão ambígua.
+- Salve checkpoint pequeno ao mudar de fase: próximo corte, horários, confirmados, pendências e caminhos. Não releia toda a conversa.
+- Meta: reduzir 70% contra execução comparável. Não declare atingida sem medição. Leia [métricas](references/metrics.md) apenas ao medir.
+
+Preserve revisão editorial, segurança, verificações críticas e prevenção de duplicatas. Não contorne limites, CAPTCHA ou rejeições de aprovação.
